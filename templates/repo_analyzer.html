@@ -8,8 +8,17 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- Add more language support for highlight.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/swift.min.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <nav class="bg-indigo-600 text-white p-4">
@@ -62,13 +71,18 @@
                 <div class="bg-white rounded-lg shadow p-6 mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-gray-800">Selected File: <span id="current-file-path">None</span></h2>
-                        <button 
-                            id="refactor-button" 
-                            onclick="refactorCode()" 
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-                        >
-                            Refactor This Code
-                        </button>
+                        <div>
+                            <span class="mr-2 text-gray-700">
+                                Language: <span id="current-language" class="font-medium text-indigo-600">python</span>
+                            </span>
+                            <button 
+                                id="refactor-button" 
+                                onclick="refactorCode()" 
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
+                            >
+                                Refactor This Code
+                            </button>
+                        </div>
                     </div>
                     <div class="border rounded p-4 bg-gray-50">
                         <pre><code id="original-code" class="language-python"></code></pre>
@@ -101,6 +115,26 @@
     </div>
     
     <script>
+        // Store current language
+        let currentLanguage = 'python';
+        
+        // Map file extensions to highlight.js language classes
+        const languageMap = {
+            'python': 'language-python',
+            'javascript': 'language-javascript',
+            'typescript': 'language-typescript',
+            'java': 'language-java',
+            'ruby': 'language-ruby',
+            'cpp': 'language-cpp',
+            'csharp': 'language-csharp',
+            'go': 'language-go',
+            'php': 'language-php',
+            'swift': 'language-swift',
+            'kotlin': 'language-kotlin',
+            'rust': 'language-rust',
+            'scala': 'language-scala'
+        };
+        
         // Load file content from GitHub
         async function loadFile(path, owner, repo) {
             try {
@@ -111,7 +145,20 @@
                     // Display file content
                     document.getElementById('current-file-path').textContent = data.path;
                     document.getElementById('original-code').textContent = data.content;
-                    hljs.highlightElement(document.getElementById('original-code'));
+                    
+                    // Update language
+                    currentLanguage = data.language || 'python';
+                    document.getElementById('current-language').textContent = currentLanguage;
+                    
+                    // Update syntax highlighting class
+                    const originalCodeElement = document.getElementById('original-code');
+                    // Remove all language classes
+                    originalCodeElement.className = '';
+                    // Add appropriate language class
+                    originalCodeElement.classList.add(languageMap[currentLanguage] || 'language-python');
+                    
+                    // Apply syntax highlighting
+                    hljs.highlightElement(originalCodeElement);
                     
                     // Show comparison section
                     document.getElementById('code-comparison').classList.remove('hidden');
@@ -135,21 +182,6 @@
                 return;
             }
             
-            // Determine language from file extension
-            const filePath = document.getElementById('current-file-path').textContent;
-            const fileExtension = filePath.split('.').pop().toLowerCase();
-            
-            let language = 'python';
-            if (['js', 'jsx'].includes(fileExtension)) {
-                language = 'javascript';
-            } else if (['ts', 'tsx'].includes(fileExtension)) {
-                language = 'typescript';
-            } else if (['java'].includes(fileExtension)) {
-                language = 'java';
-            } else if (['rb'].includes(fileExtension)) {
-                language = 'ruby';
-            }
-            
             try {
                 // Show loading state
                 const refactorButton = document.getElementById('refactor-button');
@@ -164,7 +196,7 @@
                     },
                     body: JSON.stringify({
                         code: originalCode,
-                        language: language
+                        language: currentLanguage
                     })
                 });
                 
@@ -172,13 +204,18 @@
                 
                 if (response.ok) {
                     // Display refactored code
-                    document.getElementById('refactored-code').textContent = data.refactored_code;
+                    const refactoredCodeElement = document.getElementById('refactored-code');
+                    refactoredCodeElement.textContent = data.refactored_code;
+                    
+                    // Update syntax highlighting class for refactored code
+                    refactoredCodeElement.className = '';
+                    refactoredCodeElement.classList.add(languageMap[currentLanguage] || 'language-python');
                     
                     // Format explanation with better styling
                     const explanationHtml = formatExplanation(data.explanation);
                     document.getElementById('explanation').innerHTML = explanationHtml;
                     
-                    hljs.highlightElement(document.getElementById('refactored-code'));
+                    hljs.highlightElement(refactoredCodeElement);
                     
                     // Show refactored section
                     document.getElementById('refactored-section').classList.remove('hidden');
@@ -311,7 +348,7 @@
         // Initialize syntax highlighting
         document.addEventListener('DOMContentLoaded', () => {
             hljs.configure({
-                languages: ['python', 'javascript', 'java', 'ruby', 'typescript']
+                languages: ['python', 'javascript', 'java', 'ruby', 'typescript', 'cpp', 'csharp', 'go', 'php', 'swift']
             });
         });
     </script>

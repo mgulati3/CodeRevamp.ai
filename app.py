@@ -139,7 +139,36 @@ def get_file_content():
     # Decode content
     content = base64.b64decode(file_data.get('content')).decode('utf-8')
     
-    return jsonify({"content": content, "path": file_path})
+    # Determine language from file extension
+    language = "python"  # Default
+    if file_path:
+        file_extension = file_path.split('.')[-1].lower() if '.' in file_path else ""
+        if file_extension in ['js', 'jsx']:
+            language = 'javascript'
+        elif file_extension in ['ts', 'tsx']:
+            language = 'typescript'
+        elif file_extension in ['java']:
+            language = 'java'
+        elif file_extension in ['rb']:
+            language = 'ruby'
+        elif file_extension in ['cpp', 'cc', 'cxx', 'h', 'hpp']:
+            language = 'C++'
+        elif file_extension in ['cs']:
+            language = 'C#'
+        elif file_extension in ['go']:
+            language = 'go'
+        elif file_extension in ['php']:
+            language = 'php'
+        elif file_extension in ['swift']:
+            language = 'swift'
+        elif file_extension in ['kt', 'kts']:
+            language = 'kotlin'
+        elif file_extension in ['rs']:
+            language = 'rust'
+        elif file_extension in ['scala']:
+            language = 'scala'
+    
+    return jsonify({"content": content, "path": file_path, "language": language})
 
 @app.route('/refactor-code', methods=['POST'])
 def refactor_code():
@@ -149,7 +178,7 @@ def refactor_code():
     
     data = request.json
     code = data.get('code')
-    language = data.get('language', 'python')  # Default to Python
+    language = data.get('language', 'python')  # Get language from request
     
     if not code:
         return jsonify({"error": "No code provided"}), 400
@@ -162,7 +191,7 @@ def refactor_code():
             messages=[
                 {
                     "role": "system",
-                    "content": f"You are an expert code refactorer. Refactor the following {language} code to make it cleaner, more efficient, and follow best practices. Maintain the exact same functionality. Return only the refactored code without additional explanations."
+                    "content": f"You are an expert {language} developer tasked with refactoring code. Refactor the following {language} code to make it cleaner, more efficient, and follow best practices for {language}. Maintain the exact same functionality. Return only the refactored code without additional explanations."
                 },
                 {"role": "user", "content": code}
             ],
@@ -180,11 +209,11 @@ def refactor_code():
             messages=[
                 {
                     "role": "system",
-                    "content": "You are an expert code reviewer. Explain the changes made between the original code and the refactored code, focusing on improvements in readability, efficiency, and best practices."
+                    "content": f"You are an expert {language} code reviewer. Explain the changes made between the original code and the refactored code, focusing on improvements in readability, efficiency, and best practices specific to {language}."
                 },
                 {
                     "role": "user",
-                    "content": f"Original code:\n\n{code}\n\nRefactored code:\n\n{refactored_code}\n\nExplain the key improvements made in the refactored version."
+                    "content": f"Original {language} code:\n\n{code}\n\nRefactored {language} code:\n\n{refactored_code}\n\nExplain the key improvements made in the refactored version."
                 }
             ],
             temperature=0.7
@@ -196,7 +225,8 @@ def refactor_code():
         return jsonify({
             "original_code": code,
             "refactored_code": refactored_code,
-            "explanation": explanation
+            "explanation": explanation,
+            "language": language
         })
     
     except Exception as e:
