@@ -2,355 +2,526 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repository Analysis - AI Code Refactoring Assistant</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <!-- Add more language support for highlight.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/typescript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/ruby.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/csharp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/go.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/php.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/swift.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repository Analysis - AI Code Refactoring Assistant</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <!-- Add more language support for highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/java.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/ruby.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/csharp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/go.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/php.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/swift.min.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
-    <nav class="bg-indigo-600 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="font-bold text-xl">AI Code Refactoring</a>
-            <div class="flex space-x-4">
-                <a href="/dashboard" class="hover:underline">Dashboard</a>
-                <a href="/logout" class="bg-indigo-700 hover:bg-indigo-800 px-4 py-2 rounded">Logout</a>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-6">Analyzing: {{ owner }}/{{ repo }}</h1>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- File Explorer -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Repository Files</h2>
-                <div id="file-explorer" class="overflow-y-auto max-h-96">
-                    <ul class="space-y-2">
-                        {% for item in contents %}
-                        <li>
-                            {% if item.type == 'file' %}
-                                <button 
-                                    onclick="loadFile('{{ item.path }}', '{{ owner }}', '{{ repo }}')" 
-                                    class="text-blue-600 hover:underline flex items-center"
-                                >
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    {{ item.name }}
-                                </button>
-                            {% else %}
-                                <div class="flex items-center text-gray-700">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-                                    </svg>
-                                    {{ item.name }}
-                                </div>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Code Comparison (hidden until file is selected) -->
-            <div id="code-comparison" class="lg:col-span-2 hidden">
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-gray-800">Selected File: <span id="current-file-path">None</span></h2>
-                        <div>
-                            <span class="mr-2 text-gray-700">
-                                Language: <span id="current-language" class="font-medium text-indigo-600">python</span>
-                            </span>
-                            <button 
-                                id="refactor-button" 
-                                onclick="refactorCode()" 
-                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-                            >
-                                Refactor This Code
-                            </button>
-                        </div>
-                    </div>
-                    <div class="border rounded p-4 bg-gray-50">
-                        <pre><code id="original-code" class="language-python"></code></pre>
-                    </div>
-                </div>
-                
-                <!-- Refactored Code (hidden until refactoring is done) -->
-                <div id="refactored-section" class="bg-white rounded-lg shadow p-6 hidden">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Refactored Code</h2>
-                    <div class="border rounded p-4 bg-gray-50 mb-6">
-                        <pre><code id="refactored-code" class="language-python"></code></pre>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-800 mb-2 bg-indigo-100 p-2 rounded">Key Improvements</h3>
-                        <div id="explanation" class="prose max-w-none p-4 bg-indigo-50 rounded"></div>
-                    </div>
-                    
-                    <div class="flex justify-end">
-                        <button onclick="copyRefactoredCode(event)" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mr-2">
-                            Copy Code
-                        </button>
-                        <button onclick="document.getElementById('refactored-section').classList.add('hidden')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <nav class="bg-indigo-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="/" class="font-bold text-xl">AI Code Refactoring</a>
+      <div class="flex space-x-4">
+        <a href="/dashboard" class="hover:underline">Dashboard</a>
+        <a href="/logout" class="bg-indigo-700 hover:bg-indigo-800 px-4 py-2 rounded">Logout</a>
+      </div>
     </div>
+  </nav>
+  
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Analyzing: {{ owner }}/{{ repo }}</h1>
     
-    <script>
-        // Store current language
-        let currentLanguage = 'python';
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- File Explorer -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Repository Files</h2>
+        <div id="file-explorer" class="overflow-y-auto max-h-96">
+          <ul class="space-y-2">
+            {% for item in contents %}
+            <li>
+              {% if item.type == 'file' %}
+                <button 
+                  onclick="loadFile('{{ item.path }}', '{{ owner }}', '{{ repo }}')" 
+                  class="text-blue-600 hover:underline flex items-center"
+                >
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                  {{ item.name }}
+                </button>
+              {% else %}
+                <div class="flex items-center">
+                  <button 
+                    onclick="loadFolder('{{ item.path }}', '{{ owner }}', '{{ repo }}')" 
+                    class="text-gray-700 hover:text-blue-600 flex items-center"
+                  >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                    </svg>
+                    {{ item.name }}
+                  </button>
+                </div>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Breadcrumbs navigation for folders -->
+        <div id="folder-breadcrumbs" class="mt-4 text-sm hidden">
+          <p class="font-medium mb-2">Current path:</p>
+          <div class="flex flex-wrap items-center" id="breadcrumb-items">
+            <span class="text-blue-600 hover:underline cursor-pointer" onclick="loadRootFolder('{{ owner }}', '{{ repo }}')">Root</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Code Comparison (hidden until file is selected) -->
+      <div id="code-comparison" class="lg:col-span-2 hidden">
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Selected File: <span id="current-file-path">None</span></h2>
+            <div>
+              <span class="mr-2 text-gray-700">
+                Language: <span id="current-language" class="font-medium text-indigo-600">python</span>
+              </span>
+              <button 
+                id="refactor-button" 
+                onclick="refactorCode()" 
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
+              >
+                Refactor This Code
+              </button>
+            </div>
+          </div>
+          <div class="border rounded p-4 bg-gray-50">
+            <pre><code id="original-code" class="language-python"></code></pre>
+          </div>
+        </div>
         
-        // Map file extensions to highlight.js language classes
-        const languageMap = {
-            'python': 'language-python',
-            'javascript': 'language-javascript',
-            'typescript': 'language-typescript',
-            'java': 'language-java',
-            'ruby': 'language-ruby',
-            'cpp': 'language-cpp',
-            'csharp': 'language-csharp',
-            'go': 'language-go',
-            'php': 'language-php',
-            'swift': 'language-swift',
-            'kotlin': 'language-kotlin',
-            'rust': 'language-rust',
-            'scala': 'language-scala'
+        <!-- Refactored Code (hidden until refactoring is done) -->
+        <div id="refactored-section" class="bg-white rounded-lg shadow p-6 hidden">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Refactored Code</h2>
+          <div class="border rounded p-4 bg-gray-50 mb-6">
+            <pre><code id="refactored-code" class="language-python"></code></pre>
+          </div>
+          
+          <div class="mb-6">
+            <h3 class="text-lg font-medium text-gray-800 mb-2 bg-indigo-100 p-2 rounded">Key Improvements</h3>
+            <div id="explanation" class="prose max-w-none p-4 bg-indigo-50 rounded"></div>
+          </div>
+          
+          <div class="flex justify-end">
+            <button onclick="copyRefactoredCode(event)" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mr-2">
+              Copy Code
+            </button>
+            <button onclick="document.getElementById('refactored-section').classList.add('hidden')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Folder Processing (hidden until folder is selected) -->
+      <div id="folder-processing" class="lg:col-span-2 hidden">
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Selected Folder: <span id="current-folder-path">None</span></h2>
+            <button 
+              id="refactor-folder-button" 
+              onclick="refactorFolder()" 
+              class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
+            >
+              Refactor All Files
+            </button>
+          </div>
+          
+          <div class="mb-4">
+            <h3 class="text-lg font-medium mb-2">Code Files In Folder:</h3>
+            <div id="folder-file-list" class="border rounded p-4 bg-gray-50 max-h-72 overflow-y-auto">
+              <ul class="space-y-2" id="folder-files">
+                <!-- Files will be populated here -->
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Bulk Refactoring Results -->
+        <div id="bulk-results" class="bg-white rounded-lg shadow p-6 hidden">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Refactoring Results</h2>
+          
+          <div class="mb-6">
+            <div id="refactoring-status" class="p-4 bg-green-50 rounded border border-green-200 mb-4">
+              Processing...
+            </div>
+            
+            <div class="flex justify-end">
+              <button id="download-zip-button" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mr-2 hidden">
+                Download All Refactored Files
+              </button>
+            </div>
+          </div>
+          
+          <div id="file-results" class="space-y-4">
+            <!-- Individual file results will be added here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Store current language and repo details
+    let currentLanguage = 'python';
+    let currentOwner = "{{ owner }}";
+    let currentRepo = "{{ repo }}";
+    let currentFolderFiles = [];
+    let currentBatchId = null;
+    
+    // Map file extensions to highlight.js language classes
+    const languageMap = {
+      'python': 'language-python',
+      'javascript': 'language-javascript',
+      'typescript': 'language-typescript',
+      'java': 'language-java',
+      'ruby': 'language-ruby',
+      'cpp': 'language-cpp',
+      'csharp': 'language-csharp',
+      'go': 'language-go',
+      'php': 'language-php',
+      'swift': 'language-swift',
+      'kotlin': 'language-kotlin',
+      'rust': 'language-rust',
+      'scala': 'language-scala'
+    };
+    
+    // Load file content from GitHub and update the code comparison view
+    async function loadFile(path, owner, repo) {
+      try {
+        // Hide folder processing view if visible
+        document.getElementById('folder-processing').classList.add('hidden');
+        
+        const response = await fetch(`/get-file-content?path=${encodeURIComponent(path)}&owner=${owner}&repo=${repo}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Display file content
+          document.getElementById('current-file-path').textContent = data.path;
+          document.getElementById('original-code').textContent = data.content;
+          
+          // Update language settings
+          currentLanguage = data.language || 'python';
+          document.getElementById('current-language').textContent = currentLanguage;
+          const originalCodeElement = document.getElementById('original-code');
+          originalCodeElement.className = '';
+          originalCodeElement.classList.add(languageMap[currentLanguage] || 'language-python');
+          
+          // Apply syntax highlighting
+          hljs.highlightElement(originalCodeElement);
+          
+          // Show code comparison section and hide refactored section
+          document.getElementById('code-comparison').classList.remove('hidden');
+          document.getElementById('refactored-section').classList.add('hidden');
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error loading file:', error);
+        alert('Failed to load file content. Please try again.');
+      }
+    }
+    
+    // Load folder contents and update folder processing view and breadcrumbs
+    async function loadFolder(path, owner, repo) {
+      try {
+        // Hide code comparison view
+        document.getElementById('code-comparison').classList.add('hidden');
+        
+        const response = await fetch(`/get-folder-contents?path=${encodeURIComponent(path)}&owner=${owner}&repo=${repo}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Show folder processing view and update current folder path
+          document.getElementById('folder-processing').classList.remove('hidden');
+          document.getElementById('current-folder-path').textContent = path;
+          
+          // Populate file list within the folder
+          const folderFilesElem = document.getElementById('folder-files');
+          folderFilesElem.innerHTML = '';
+
+
+          // Displaying each folder 
+          data.dirs.forEach(dir => {
+            const li = document.createElement('li');
+            li.innerHTML = `<button onclick="loadFolder('${dir.path}', '${owner}', '${repo}')" class="text-gray-700 hover:text-blue-600"><strong>[DIRECTORY]</strong> ${dir.name}</button>`;
+            folderFilesElem.appendChild(li);
+          });
+          
+          // Displaying code files 
+          currentFolderFiles = data.files;
+          currentFolderFiles.forEach(file => {
+            const li = document.createElement('li');
+            li.innerHTML = `<button onclick="loadFile('${file.path}', '${owner}', '${repo}')" class="text-blue-600 hover:underline">${file.name}</button>`;
+            folderFilesElem.appendChild(li);
+          });
+
+          // Update breadcrumbs navigation
+          updateBreadcrumbs(path, owner, repo);
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error loading folder:', error);
+        alert('Failed to load folder contents. Please try again.');
+      }
+    }
+    
+    // Load the root folder (i.e. clear folder processing view)
+    function loadRootFolder(owner, repo) {
+      document.getElementById('folder-breadcrumbs').classList.add('hidden');
+      document.getElementById('folder-processing').classList.add('hidden');
+    }
+    
+    // Update breadcrumbs navigation based on current folder path
+    function updateBreadcrumbs(path, owner, repo) {
+      const breadcrumbsContainer = document.getElementById('breadcrumb-items');
+      breadcrumbsContainer.innerHTML = '';
+      const pathParts = path.split('/').filter(part => part);
+      
+      // Add root link
+      const rootLink = document.createElement('span');
+      rootLink.className = "text-blue-600 hover:underline cursor-pointer mr-2";
+      rootLink.textContent = "Root";
+      rootLink.onclick = function() {
+        loadRootFolder(owner, repo);
+      };
+      breadcrumbsContainer.appendChild(rootLink);
+      
+      let cumulativePath = '';
+      pathParts.forEach((part, index) => {
+        cumulativePath += (index === 0 ? part : '/' + part);
+        const separator = document.createTextNode(' / ');
+        breadcrumbsContainer.appendChild(separator);
+        const folderLink = document.createElement('span');
+        folderLink.className = "text-blue-600 hover:underline cursor-pointer mr-2";
+        folderLink.textContent = part;
+        folderLink.onclick = function() {
+          loadFolder(cumulativePath, owner, repo);
         };
+        breadcrumbsContainer.appendChild(folderLink);
+      });
+      
+      document.getElementById('folder-breadcrumbs').classList.remove('hidden');
+    }
+    
+    // Refactor the currently loaded file using the refactor-code endpoint
+    async function refactorCode() {
+      const originalCode = document.getElementById('original-code').textContent;
+      if (!originalCode) {
+        alert('No code to refactor!');
+        return;
+      }
+      
+      try {
+        const refactorButton = document.getElementById('refactor-button');
+        const originalText = refactorButton.textContent;
+        refactorButton.textContent = 'Refactoring...';
+        refactorButton.disabled = true;
         
-        // Load file content from GitHub
-        async function loadFile(path, owner, repo) {
-            try {
-                const response = await fetch(`/get-file-content?path=${encodeURIComponent(path)}&owner=${owner}&repo=${repo}`);
-                const data = await response.json();
-                
-                if (response.ok) {
-                    // Display file content
-                    document.getElementById('current-file-path').textContent = data.path;
-                    document.getElementById('original-code').textContent = data.content;
-                    
-                    // Update language
-                    currentLanguage = data.language || 'python';
-                    document.getElementById('current-language').textContent = currentLanguage;
-                    
-                    // Update syntax highlighting class
-                    const originalCodeElement = document.getElementById('original-code');
-                    // Remove all language classes
-                    originalCodeElement.className = '';
-                    // Add appropriate language class
-                    originalCodeElement.classList.add(languageMap[currentLanguage] || 'language-python');
-                    
-                    // Apply syntax highlighting
-                    hljs.highlightElement(originalCodeElement);
-                    
-                    // Show comparison section
-                    document.getElementById('code-comparison').classList.remove('hidden');
-                    
-                    // Hide refactored section if it was shown
-                    document.getElementById('refactored-section').classList.add('hidden');
-                } else {
-                    alert(`Error: ${data.error}`);
-                }
-            } catch (error) {
-                console.error('Error loading file:', error);
-                alert('Failed to load file content. Please try again.');
-            }
-        }
-        
-        // Refactor selected code
-        async function refactorCode() {
-            const originalCode = document.getElementById('original-code').textContent;
-            if (!originalCode) {
-                alert('No code to refactor!');
-                return;
-            }
-            
-            try {
-                // Show loading state
-                const refactorButton = document.getElementById('refactor-button');
-                const originalButtonText = refactorButton.textContent;
-                refactorButton.textContent = 'Refactoring...';
-                refactorButton.disabled = true;
-                
-                const response = await fetch('/refactor-code', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        code: originalCode,
-                        language: currentLanguage
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    // Display refactored code
-                    const refactoredCodeElement = document.getElementById('refactored-code');
-                    refactoredCodeElement.textContent = data.refactored_code;
-                    
-                    // Update syntax highlighting class for refactored code
-                    refactoredCodeElement.className = '';
-                    refactoredCodeElement.classList.add(languageMap[currentLanguage] || 'language-python');
-                    
-                    // Format explanation with better styling
-                    const explanationHtml = formatExplanation(data.explanation);
-                    document.getElementById('explanation').innerHTML = explanationHtml;
-                    
-                    hljs.highlightElement(refactoredCodeElement);
-                    
-                    // Show refactored section
-                    document.getElementById('refactored-section').classList.remove('hidden');
-                } else {
-                    alert(`Error: ${data.error}`);
-                }
-            } catch (error) {
-                console.error('Error refactoring code:', error);
-                alert('Failed to refactor code. Please try again.');
-            } finally {
-                // Reset button state
-                refactorButton.textContent = originalButtonText;
-                refactorButton.disabled = false;
-            }
-        }
-        
-        // Format explanation with improved styling
-        function formatExplanation(explanation) {
-            // Split paragraphs
-            const paragraphs = explanation.split('\n\n');
-            
-            // Convert numbered lists correctly
-            let formattedExplanation = '';
-            
-            for (const paragraph of paragraphs) {
-                // Check if it's a numbered list item (starts with number followed by period or dot)
-                if (/^\d+[\.\)]\s/.test(paragraph)) {
-                    // This is likely a list item, so we'll create or continue a list
-                    if (!formattedExplanation.endsWith('</ol>') && !formattedExplanation.endsWith('<ol class="list-decimal list-inside mb-4">')) {
-                        formattedExplanation += '<ol class="list-decimal list-inside mb-4">';
-                    }
-                    // Extract the list item content (removing the number prefix)
-                    const listItemContent = paragraph.replace(/^\d+[\.\)]\s+/, '');
-                    formattedExplanation += `<li class="mb-2">${listItemContent}</li>`;
-                } else {
-                    // Close any open list before adding a regular paragraph
-                    if (formattedExplanation.endsWith('</li>')) {
-                        formattedExplanation += '</ol>';
-                    }
-                    // Handle headings (if any)
-                    if (paragraph.startsWith('#')) {
-                        const headingLevel = paragraph.match(/^#+/)[0].length;
-                        const headingText = paragraph.replace(/^#+\s+/, '');
-                        formattedExplanation += `<h${headingLevel} class="text-lg font-semibold mb-2">${headingText}</h${headingLevel}>`;
-                    } else {
-                        formattedExplanation += `<p class="mb-4">${paragraph}</p>`;
-                    }
-                }
-            }
-            
-            // Close any open list at the end
-            if (formattedExplanation.endsWith('</li>')) {
-                formattedExplanation += '</ol>';
-            }
-            
-            // Highlight key terms
-            formattedExplanation = formattedExplanation
-                .replace(/DRY \(Don't Repeat Yourself\)/g, '<span class="font-bold text-indigo-700">DRY (Don\'t Repeat Yourself)</span>')
-                .replace(/\b(readability|maintainability|efficiency)\b/gi, '<span class="text-indigo-600">$1</span>');
-            
-            return formattedExplanation;
-        }
-        
-        // Copy refactored code to clipboard
-        function copyRefactoredCode(event) {
-            const refactoredCode = document.getElementById('refactored-code').textContent;
-            
-            try {
-                // Try the newer Clipboard API first
-                navigator.clipboard.writeText(refactoredCode)
-                    .then(() => {
-                        showCopySuccess(event);
-                    })
-                    .catch(err => {
-                        // If that fails, try the fallback method
-                        fallbackCopyTextToClipboard(refactoredCode, event);
-                    });
-            } catch (err) {
-                // For browsers where navigator.clipboard is undefined
-                fallbackCopyTextToClipboard(refactoredCode, event);
-            }
-        }
-
-        function fallbackCopyTextToClipboard(text, event) {
-            // Create a temporary textarea element
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            
-            // Make it non-visible
-            textArea.style.position = "fixed";
-            textArea.style.top = "0";
-            textArea.style.left = "0";
-            textArea.style.width = "2em";
-            textArea.style.height = "2em";
-            textArea.style.padding = "0";
-            textArea.style.border = "none";
-            textArea.style.outline = "none";
-            textArea.style.boxShadow = "none";
-            textArea.style.background = "transparent";
-            
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showCopySuccess(event);
-                } else {
-                    console.error('Fallback: Copying text failed');
-                    alert('Failed to copy code to clipboard');
-                }
-            } catch (err) {
-                console.error('Fallback: Unable to copy', err);
-                alert('Failed to copy code to clipboard');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-
-        function showCopySuccess(event) {
-            const copyButton = event.target;
-            const originalText = copyButton.textContent;
-            copyButton.textContent = 'Copied!';
-            setTimeout(() => {
-                copyButton.textContent = originalText;
-            }, 2000);
-        }
-        
-        // Initialize syntax highlighting
-        document.addEventListener('DOMContentLoaded', () => {
-            hljs.configure({
-                languages: ['python', 'javascript', 'java', 'ruby', 'typescript', 'cpp', 'csharp', 'go', 'php', 'swift']
-            });
+        const response = await fetch('/refactor-code', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            code: originalCode,
+            language: currentLanguage
+          })
         });
-    </script>
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Display refactored code and explanation
+          const refactoredCodeElement = document.getElementById('refactored-code');
+          refactoredCodeElement.textContent = data.refactored_code;
+          refactoredCodeElement.className = '';
+          refactoredCodeElement.classList.add(languageMap[currentLanguage] || 'language-python');
+          document.getElementById('explanation').innerHTML = formatExplanation(data.explanation);
+          hljs.highlightElement(refactoredCodeElement);
+          document.getElementById('refactored-section').classList.remove('hidden');
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error refactoring code:', error);
+        alert('Failed to refactor code. Please try again.');
+      } finally {
+        refactorButton.textContent = 'Refactor This Code';
+        refactorButton.disabled = false;
+      }
+    }
+    
+    // Refactor all files in the current folder using the refactor-folder endpoint
+    async function refactorFolder() {
+      if (currentFolderFiles.length === 0) {
+        alert('No files in folder to refactor!');
+        return;
+      }
+      
+      try {
+        const refactorFolderButton = document.getElementById('refactor-folder-button');
+        const originalText = refactorFolderButton.textContent;
+        refactorFolderButton.textContent = 'Refactoring...';
+        refactorFolderButton.disabled = true;
+        
+        const response = await fetch('/refactor-folder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            folder_path: document.getElementById('current-folder-path').textContent,
+            owner: currentOwner,
+            repo: currentRepo,
+            files: currentFolderFiles
+          })
+        });
+        
+        const data = await response.json();
+        if (response.ok) {
+          document.getElementById('bulk-results').classList.remove('hidden');
+          document.getElementById('refactoring-status').textContent = data.message;
+          currentBatchId = data.batch_id;
+          const fileResultsContainer = document.getElementById('file-results');
+          fileResultsContainer.innerHTML = '';
+          data.results.forEach(result => {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'border rounded p-4 bg-gray-50';
+            resultDiv.innerHTML = `<strong>${result.file_path}</strong><br/>
+              <button onclick="window.location.href='/download-refactored-files/${currentBatchId}'" class="text-blue-600 hover:underline">Download Refactored File</button>`;
+            fileResultsContainer.appendChild(resultDiv);
+          });
+          document.getElementById('download-zip-button').classList.remove('hidden');
+          document.getElementById('download-zip-button').onclick = function() {
+            window.location.href = `/download-refactored-files/${currentBatchId}`;
+          };
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error refactoring folder:', error);
+        alert('Failed to refactor folder. Please try again.');
+      } finally {
+        refactorFolderButton.textContent = 'Refactor All Files';
+        refactorFolderButton.disabled = false;
+      }
+    }
+    
+    // Format explanation text for display
+    function formatExplanation(explanation) {
+      const paragraphs = explanation.split('\n\n');
+      let formattedExplanation = '';
+      
+      paragraphs.forEach(paragraph => {
+        if (/^\d+[\.\)]\s/.test(paragraph)) {
+          if (!formattedExplanation.endsWith('</ol>')) {
+            formattedExplanation += '<ol class="list-decimal list-inside mb-4">';
+          }
+          const listItemContent = paragraph.replace(/^\d+[\.\)]\s+/, '');
+          formattedExplanation += `<li class="mb-2">${listItemContent}</li>`;
+        } else {
+          if (formattedExplanation.endsWith('</li>')) {
+            formattedExplanation += '</ol>';
+          }
+          if (paragraph.startsWith('#')) {
+            const headingLevel = paragraph.match(/^#+/)[0].length;
+            const headingText = paragraph.replace(/^#+\s+/, '');
+            formattedExplanation += `<h${headingLevel} class="text-lg font-semibold mb-2">${headingText}</h${headingLevel}>`;
+          } else {
+            formattedExplanation += `<p class="mb-4">${paragraph}</p>`;
+          }
+        }
+      });
+      
+      if (formattedExplanation.endsWith('</li>')) {
+        formattedExplanation += '</ol>';
+      }
+      
+      formattedExplanation = formattedExplanation
+        .replace(/DRY \(Don't Repeat Yourself\)/g, '<span class="font-bold text-indigo-700">DRY (Don\'t Repeat Yourself)</span>')
+        .replace(/\b(readability|maintainability|efficiency)\b/gi, '<span class="text-indigo-600">$1</span>');
+      
+      return formattedExplanation;
+    }
+    
+    // Copy refactored code to clipboard
+    function copyRefactoredCode(event) {
+      const refactoredCode = document.getElementById('refactored-code').textContent;
+      try {
+        navigator.clipboard.writeText(refactoredCode)
+          .then(() => {
+            showCopySuccess(event);
+          })
+          .catch(err => {
+            fallbackCopyTextToClipboard(refactoredCode, event);
+          });
+      } catch (err) {
+        fallbackCopyTextToClipboard(refactoredCode, event);
+      }
+    }
+    
+    // Fallback method for copying text
+    function fallbackCopyTextToClipboard(text, event) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.width = "2em";
+      textArea.style.height = "2em";
+      textArea.style.padding = "0";
+      textArea.style.border = "none";
+      textArea.style.outline = "none";
+      textArea.style.boxShadow = "none";
+      textArea.style.background = "transparent";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopySuccess(event);
+        } else {
+          alert('Failed to copy code to clipboard');
+        }
+      } catch (err) {
+        alert('Failed to copy code to clipboard');
+      }
+      
+      document.body.removeChild(textArea);
+    }
+    
+    // Show visual feedback when code is copied
+    function showCopySuccess(event) {
+      const copyButton = event.target;
+      const originalText = copyButton.textContent;
+      copyButton.textContent = 'Copied!';
+      setTimeout(() => {
+        copyButton.textContent = originalText;
+      }, 2000);
+    }
+    
+    // Initialize syntax highlighting on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      hljs.configure({
+        languages: ['python', 'javascript', 'java', 'ruby', 'typescript', 'cpp', 'csharp', 'go', 'php', 'swift']
+      });
+    });
+  </script>
 </body>
 </html>
