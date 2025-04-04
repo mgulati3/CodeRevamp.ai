@@ -380,7 +380,7 @@
           fileResultsContainer.innerHTML = '';
           data.results.forEach(result => {
             const resultDiv = document.createElement('div');
-            resultDiv.className = 'border rounded p-4 bg-gray-50';
+            resultDiv.className = 'border border-gray-700 rounded p-4 bg-gray-800 text-white';
             resultDiv.innerHTML = `<strong>${result.file_path}</strong>`; 
             // resultDiv.innerHTML = `<strong>${result.file_path}</strong><br/>
             //   <button onclick="window.location.href='/download-refactored-files/${currentBatchId}'" class="text-blue-600 hover:underline">Download Refactored File</button>`;
