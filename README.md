@@ -69,15 +69,9 @@ Getting Started
 
 ### Installation
 
-1.  bashCopygit clone https://github.com/your-username/code-revamp-ai.gitcd code-revamp-ai
+1.  bashCopygit clone https://github.com/your-username/CodeRevamp.ai.gitcd code-revamp-ai
     
 2.  bashCopypython -m venv venvsource venv/bin/activate # For Windows, use: venv\\Scripts\\activatepip install -r requirements.txt
     
 3.  Create a .env file in the project root with the following:envCopyGITHUB\_CLIENT\_ID=your\_github\_client\_idGITHUB\_CLIENT\_SECRET=your\_github\_client\_secretOPENAI\_API\_KEY=your\_openai\_api\_keySECRET\_KEY=your\_flask\_secret\_key
     
-
-### Running Locally
-
-Start the development server with:
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   bashCopyflask run   `
