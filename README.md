@@ -69,9 +69,75 @@ Getting Started
 
 ### Installation
 
-1.  bashCopygit clone https://github.com/your-username/CodeRevamp.ai.gitcd code-revamp-ai
-    
-2.  bashCopypython -m venv venvsource venv/bin/activate # For Windows, use: venv\\Scripts\\activatepip install -r requirements.txt
-    
-3.  Create a .env file in the project root with the following:envCopyGITHUB\_CLIENT\_ID=your\_github\_client\_idGITHUB\_CLIENT\_SECRET=your\_github\_client\_secretOPENAI\_API\_KEY=your\_openai\_api\_keySECRET\_KEY=your\_flask\_secret\_key
-    
+1. **Clone the Repository:**
+
+```bash
+   git clone https://github.com/your-username/code-revamp-ai.git
+   cd code-revamp-ai
+```
+
+2. **Set Up a Virtual Environment & Install Dependencies: bash Copy:**
+
+```bash
+   python -m venv venv
+   source venv/bin/activate  # For Windows, use: venv\Scripts\activate
+   pip install -r requirements.txt
+```
+
+3. **Configure Environment Variables:**
+
+   Create a .env file in the project root with the following:
+       GITHUB_CLIENT_ID=your_github_client_id
+       GITHUB_CLIENT_SECRET=your_github_client_secret
+       OPENAI_API_KEY=your_openai_api_key
+       SECRET_KEY=your_flask_secret_key
+
+### Running Locally
+
+**Start the development server with:**
+
+```bash
+   flash run
+```
+
+
+## Usage
+
+### Connect to GitHub
+Click the **"Connect with GitHub"** button on the homepage to authenticate using GitHub OAuth.  
+Ensure your GitHub OAuth app’s callback URL is set to:  
+`https://coderevamp-ai.onrender.com/github-callback`
+
+### Select a Repository
+After authentication, your dashboard will display your repositories. Click on a repository to view its contents.
+
+### Refactor Code
+- Open a file or folder to analyze.
+- Click **"Refactor This Code"** to send the code to the OpenAI API for refactoring.
+- Once complete, the tool displays the refactored code along with detailed explanations focusing on **readability, efficiency, and best practices specific to {language}**.
+
+### Download Refactored Files
+If you refactor a folder, you can download the entire set of refactored files along with explanations in a zip archive.
+
+## Impact & Future Work
+
+**CodeRevamp AI** is more than just a tool—it's a testament to how artificial intelligence can enhance developer productivity and code quality. Future enhancements may include:
+
+- **Real-Time Code Analysis:**  
+  Integrating with IDEs for on-the-fly refactoring suggestions.
+  
+- **Expanded Language Support:**  
+  Extending beyond the current set of languages to cater to a wider audience.
+  
+- **Advanced Metrics:**  
+  Providing quantitative metrics on code complexity and maintainability improvements.
+
+## Conclusion
+
+**CodeRevamp AI** embodies a cutting-edge solution designed for modern development workflows. It not only streamlines the refactoring process but also educates developers by explaining improvements in detail—focusing on **readability, efficiency, and best practices specific to the language**. This project is a standout addition to any tech portfolio, demonstrating the innovative application of AI to solve real-world software engineering challenges.
+
+
+
+
+
+
