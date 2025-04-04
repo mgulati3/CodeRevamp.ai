@@ -119,18 +119,6 @@ After authentication, your dashboard will display your repositories. Click on a 
 ### Download Refactored Files
 If you refactor a folder, you can download the entire set of refactored files along with explanations in a zip archive.
 
-## Impact & Future Work
-
-**CodeRevamp AI** is more than just a tool—it's a testament to how artificial intelligence can enhance developer productivity and code quality. Future enhancements may include:
-
-- **Real-Time Code Analysis:**  
-  Integrating with IDEs for on-the-fly refactoring suggestions.
-  
-- **Expanded Language Support:**  
-  Extending beyond the current set of languages to cater to a wider audience.
-  
-- **Advanced Metrics:**  
-  Providing quantitative metrics on code complexity and maintainability improvements.
 
 ## Conclusion
 
