@@ -300,7 +300,6 @@
       
       try {
         const refactorButton = document.getElementById('refactor-button');
-        const originalText = refactorButton.textContent;
         refactorButton.textContent = 'Refactoring...';
         refactorButton.disabled = true;
         
@@ -326,14 +325,22 @@
           document.getElementById('explanation').innerHTML = formatExplanation(data.explanation);
           hljs.highlightElement(refactoredCodeElement);
           document.getElementById('refactored-section').classList.remove('hidden');
+
+          // Change button text to indicate work is done
+          refactorButton.textContent = 'Work Done!!';
+
+          // Optionally, revert the text after 3 seconds:
+          setTimeout(() => {
+            refactorButton.textContent = 'Refactor This Code';
+          }, 3000);
         } else {
           alert(`Error: ${data.error}`);
+          refactorButton.textContent = 'Refactor This Code';
         }
       } catch (error) {
         console.error('Error refactoring code:', error);
         alert('Failed to refactor code. Please try again.');
       } finally {
-        refactorButton.textContent = 'Refactor This Code';
         refactorButton.disabled = false;
       }
     }
