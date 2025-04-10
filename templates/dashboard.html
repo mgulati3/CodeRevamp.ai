@@ -4,31 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - CodeRevamp AI</title>
+  <!-- Tailwind CSS for styling -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
+  <!-- Navigation Bar -->
   <nav class="bg-gray-800 text-white p-4">
     <div class="container mx-auto flex justify-between items-center">
-      <a href="/" class="font-bold text-xl">CodeRevamp AI</a>
+      <!-- Application Name -->
+      <a href="/" class="font-bold text-xl" aria-label="CodeRevamp AI Home">CodeRevamp AI</a>
       <div class="flex items-center">
+        <!-- User Greeting -->
         <span class="mr-4">Welcome, {{ user }}</span>
-        <a href="/logout" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Logout</a>
+        <!-- Logout Button -->
+        <a href="/logout" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded" aria-label="Logout">Logout</a>
       </div>
     </div>
   </nav>
+
+  <!-- Main Content -->
   <div class="container mx-auto px-4 py-8">
+    <!-- Page Title -->
     <h1 class="text-2xl font-bold mb-6">Your Repositories</h1>
+
+    <!-- Repositories Grid -->
+    {% if repos %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for repo in repos %}
+      <!-- Repository Card -->
       <div class="bg-gray-800 rounded-lg shadow p-6">
+        <!-- Repository Name -->
         <h2 class="text-xl font-semibold text-white mb-2">{{ repo.name }}</h2>
+        <!-- Repository Description -->
         <p class="text-gray-400 mb-4">
-          {% if repo.description %}
-            {{ repo.description }}
-          {% else %}
-            No description available
-          {% endif %}
+          {{ repo.description or "No description available" }}
         </p>
+        <!-- Repository Metadata -->
         <div class="flex items-center text-sm text-gray-300 mb-4">
           <span class="mr-4">
             <span class="font-medium">{{ repo.language or 'Unknown' }}</span>
@@ -37,12 +48,19 @@
             <span class="font-medium">{{ repo.stargazers_count }}</span> stars
           </span>
         </div>
-        <a href="/analyze/{{ repo.owner.login }}/{{ repo.name }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        <!-- Analyze Button -->
+        <a href="/analyze/{{ repo.owner.login }}/{{ repo.name }}" 
+           class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+           aria-label="Analyze {{ repo.name }}">
           Analyze Repository
         </a>
       </div>
       {% endfor %}
     </div>
+    {% else %}
+    <!-- Fallback Content for No Repositories -->
+    <p class="text-gray-400">You don't have any repositories to display.</p>
+    {% endif %}
   </div>
 </body>
 </html>
