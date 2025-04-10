@@ -1,4 +1,10 @@
-# app.py - Main Flask Application
+"""
+app.py - Main Flask Application
+
+This application provides a web interface for GitHub repository analysis and code refactoring
+using OpenAI's GPT-4 model. Users can authenticate with GitHub, browse repositories, and
+refactor code files or entire folders with explanations for the changes.
+"""
 
 import os
 import requests
