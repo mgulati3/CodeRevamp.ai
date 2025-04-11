@@ -72,7 +72,7 @@ Getting Started
 1. **Clone the Repository:**
 
 ```bash
-   git clone https://github.com/your-username/code-revamp-ai.git
+   git clone https://github.com/mgulati3/code-revamp-ai.git
    cd code-revamp-ai
 ```
 
