@@ -73,7 +73,7 @@ Getting Started
 
 ```bash
    git clone https://github.com/mgulati3/CodeRevamp.ai.git
-   cd code-revamp-ai
+   cd CodeRevamp.ai
 ```
 
 2. **Set Up a Virtual Environment & Install Dependencies: bash Copy:**
