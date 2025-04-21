@@ -129,6 +129,18 @@ If you refactor a folder, you can download the entire set of refactored files al
 
 
 
+## CodeRevamp AI – Login Page
+
+![Screenshot 2025-04-20 at 6 48 12 PM](https://github.com/user-attachments/assets/9de1a3d5-22a9-421f-8790-ae3f3a15493f)
+
+## CodeRevamp AI – GitHub Repository Dashboard
+
+![Screenshot 2025-04-20 at 6 48 27 PM](https://github.com/user-attachments/assets/24a53353-be19-480c-8d99-276de2c060b2)
+
+## CodeRevamp AI – File & Folder Refactoring Interface
+
+![Screenshot 2025-04-20 at 6 51 53 PM](https://github.com/user-attachments/assets/bdf099aa-29d8-4192-84ec-f04598cfa430)
+
 
 
 
